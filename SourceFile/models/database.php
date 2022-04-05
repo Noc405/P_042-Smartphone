@@ -487,6 +487,20 @@ class Database {
     }
 
     /**
+     * Get the lowest price product
+     */
+    public function getLowerPriceProduct(){
+        // Get the informations of the phones
+        $queryRequestOrdered = "SELECT * FROM t_products
+        ORDER BY proPrice ASC
+        LIMIT 1";
+        // Execute the request
+        $PhoneReturned = $this->querySimpleExecute($queryRequestOrdered);
+        //return the array
+        return $PhoneReturned;
+    }
+
+    /**
      * Get all the smartphone
      */
     public function selectAllProduct(){

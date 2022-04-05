@@ -77,16 +77,33 @@
                 </p>
             </div>
         </div>
+        <?php
+            $database = new Database();
+            $products = $database->getLowerPriceProduct();
+        ?>
         <div class="row justify-content-around">
-            <div class="col-12 col-md-4 mb-4">
-                <div class="card h-100">
-                    <div class="w-100 d-flex justify-content-around">
-                        <a href="shop-single.html">
-                            <img src="../../../../../P_042-Smartphone/SourceFile/ressources/productsImages/Testiphone.jpg" class="card-img-top" alt="Image of the smartphone that have the lowest price">
-                        </a>
+            <div class="col-md-4">
+                <div class="card mb-4 product-wap rounded-0">
+                    <div class="card rounded-0">
+                        <div class="w-100 d-flex justify-content-around picturePhoneContent">
+                            <img class="card-img rounded-0 img-fluid" src="../../../../../P_042-Smartphone/SourceFile/ressources/productsImages/<?=$products[0]['proImg'];?>" alt="Image of the phone">
+                        </div>
+                        <div class="card-img-overlay rounded-0 product-overlay d-flex align-items-center justify-content-center">
+                            <ul class="list-unstyled">
+                                <li><a class="btn btn-success text-white mt-2" href="index.php?controller=shopSingle&action=shopSingle&id=<?=$products[0]['idProducts'];?>"><i class="far fa-eye"></i></a></li>
+                                <!-- <li><a class="btn btn-success text-white mt-2" href="shop-single.html"><i class="fas fa-cart-plus"></i></a></li> -->
+                            </ul>
+                        </div>
                     </div>
                     <div class="card-body">
-                        <ul class="list-unstyled d-flex justify-content-between">
+                        <a href="index.php?controller=shopSingle&action=shopSingle&id=<?=$products[0]['idProducts'];?>" class="h3 text-decoration-none">
+                            <ul class="w-100 list-unstyled mb-0">
+                                <li class="mt-2"><?=$products[0]['proName'];?></li>
+                                <li class="mt-2"><?=$products[0]['proCategory'];?></li>
+                            </ul>
+                        </a>
+                        <!-- star for know the appreciacions of the users -->
+                        <!-- <ul class="list-unstyled d-flex justify-content-center mb-1">
                             <li>
                                 <i class="text-warning fa fa-star"></i>
                                 <i class="text-warning fa fa-star"></i>
@@ -94,13 +111,8 @@
                                 <i class="text-muted fa fa-star"></i>
                                 <i class="text-muted fa fa-star"></i>
                             </li>
-                            <li class="text-muted text-right">$240.00</li>
-                        </ul>
-                        <a href="shop-single.html" class="h2 text-decoration-none text-dark">IPhone</a>
-                        <p class="card-text">
-                            Description
-                        </p>
-                        <p class="text-muted">Reviews ($numbers)</p>
+                        </ul> -->
+                        <p class="text-center mb-0">$<?=$products[0]['proPrice'];?></p>
                     </div>
                 </div>
             </div>
