@@ -16,20 +16,20 @@
                         <a class="nav-link" href="index.php?controller=home&action=home">Home</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="index.php?controller=about&action=aboutUs">About</a>
+                        <a class="nav-link" href="index.php?controller=home&action=home">About</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="index.php?controller=shop&action=home&os=all&order=all">Shop</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="index.php?controller=contact&action=contact">Contact</a>
+                        <a class="nav-link" href="index.php?controller=home&action=home">Contact</a>
                     </li>
                     <?php
                     if(isset($_SESSION['admin'])){
                         if($_SESSION['admin'] == true){
                     ?>
                         <li class="nav-item">
-                            <a class="nav-link" href="index.php?controller=admin&action=adminInterface">Administration</a>
+                            <a class="nav-link" href="index.php?controller=home&action=home">Administration</a>
                         </li>
                     <?php
                         }
