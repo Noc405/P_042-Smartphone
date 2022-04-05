@@ -18,6 +18,9 @@ date_default_timezone_set('Europe/Zurich');
 include_once 'controllers/Controller.php';
 include_once 'controllers/HomeController.php';
 include_once 'controllers/LogController.php';
+include_once 'controllers/ShopController.php';
+include_once 'controllers/ShopSingleController.php';
+include_once 'models/database.php';
 
 class MainController {
 
@@ -51,6 +54,12 @@ class MainController {
             case 'logUsers':
                 $link = new LogController();
                 break;
+            case 'shop':
+                $link = new ShopController();
+                break;
+            case 'shopSingle':
+                $link = new ShopSingleController();
+                break;
             default:
                 $link = new HomeController();
                 break;
@@ -69,13 +78,13 @@ class MainController {
             $content = $currentPage->display();
 
             if($currentPage == new LogController){
-                include(dirname(__FILE__) . '/views/header.html');
+                include(dirname(__FILE__) . '/views/header.php');
                 echo $content;
             }else{
-                include(dirname(__FILE__) . '/views/header.html');
+                include(dirname(__FILE__) . '/views/header.php');
                 include(dirname(__FILE__) . '/views/menu.php');
                 echo $content;
-                include(dirname(__FILE__) . '/views/footer.html');
+                include(dirname(__FILE__) . '/views/footer.php');
             }
 
     }

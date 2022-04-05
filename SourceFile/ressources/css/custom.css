@@ -12,6 +12,15 @@ Custom Css
 .contentLinkBackHome{
     text-align: right;
 }
+.picturePhoneContent{
+    height: 300px;
+}
+.contentSinglePhoneImage{
+    height: 400px;
+}
+.contentSinglePhoneImage img{
+    width: auto;
+}
 
 @media only screen and (max-width: 1220px) {
     .nameUserConnected{
@@ -26,5 +35,14 @@ Custom Css
     }
     .numberCart{
         display: none;
+    }
+    .picturePhoneContent{
+        height: 200px;
+    }
+    .contentSinglePhoneImage{
+        height: 300px;
+    }
+    .contentSinglePhoneImage img{
+        width: auto;
     }
 }

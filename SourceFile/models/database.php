@@ -7,7 +7,7 @@
  * Description :  File that take the informations from the database
  */
 
-include '../../UserContent/usersInfos/userInfos.php';
+include 'data/userInfos/userInfos.php';
 
 class Database {
     
@@ -23,7 +23,7 @@ class Database {
         $this->connexionValues = $connexion->getValues();
 
         //Get the value from the json file for the password
-        $Json = file_get_contents("../../UserContent/usersInfos/password.json");
+        $Json = file_get_contents("data/userInfos/passwords.json");
         // Converts to an array 
         $passwordArray = json_decode($Json, true);
 
@@ -87,118 +87,445 @@ class Database {
     }
 
     /**
-     * Set an array with all the user in the db
-     * @return array
+     * Insert a user to the database
      */
-    public function getAllTeachers(){
-        // Recover the id, the firstname, the name and the nickname of all the teachers 
-        $queryRequest = "SELECT idTeacher, teaFirstname, teaName, teaNickname FROM `t_teacher`";
-        // Set an array with the values
-        $teachers = $this->querySimpleExecute($queryRequest);
-        // Return the array
-        return $teachers;
-    }
-
-    /**
-     * Get one teacher from the database with the id
-     * @return array
-     */
-    public function getOneTeacher($id){
-        // Recover the id, the firstname, the name and the nickname of all the teachers 
-        $queryRequest = "SELECT idTeacher, teaFirstname, teaName, teaGender, fkSection, teaNickname, teaOrigine, t_section.secName FROM `t_teacher` 
-        INNER JOIN t_section ON t_teacher.fkSection = t_section.idSection
-        WHERE idTeacher=:idTeacher";
-        //Do the array with binds
+    public function insertUser($email, $password, $username, $age){
+        // Get the informations of the user
+        $queryRequest = "INSERT INTO `t_users` (`useEmail`, `usePassword`, `useUsername`, `useAge`)
+        VALUES (:email, :password, :username, :age);";
+        // Set an array with the binds values
         $arrayBinds = array(
-            array("varName" => "idTeacher", "value" => $id, "type" => PDO::PARAM_INT)
+            array("varName" => "email", "value" => $email, "type" => PDO::PARAM_STR),
+            array("varName" => "password", "value" => $password, "type" => PDO::PARAM_STR),
+            array("varName" => "username", "value" => $username, "type" => PDO::PARAM_STR),
+            array("varName" => "age", "value" => $age, "type" => PDO::PARAM_INT)
         );
-        // Set an array with the values
-        $teacher = $this->queryPrepareExecute($queryRequest, $arrayBinds);
-        // Return the array
-        return $teacher;
+        // Insert the user
+        $this->queryPrepareExecute($queryRequest, $arrayBinds);
     }
 
     /**
-     * Get all the section
-     * @return array
+     * Select a user with the email
      */
-    public function getAllSections(){
-        // Recover the id, the firstname, the name and the nickname of all the teachers 
-        $sectionsQuery = "SELECT idSection, secName FROM `t_section`";
-        //Do the prepare query
-        $section = $this->querySimpleExecute($sectionsQuery);
-        // Return the array
-        return $section;
-    }
-
-    /**
-     * Get the users with the login entered
-     * @return array
-     */
-    public function getAUser($loginUser){
-        // Recover the id, the firstname, the name and the nickname of all the teachers 
-        $usersQuery = "SELECT usePassword, useLogin, useAdministrator, idUser FROM `t_user` WHERE useLogin = :userLogin";
-        //Do the binds array
+    public function selectUserWithEmail($email){
+        // Get the informations of the user
+        $queryRequest = "SELECT idUser, useUsername, useAge, usePassword, useAdministrator FROM t_users WHERE useEmail=:email";
+        // Set an array with the binds values
         $arrayBinds = array(
-            0 => array("varName" => "userLogin", "value" => $loginUser, "type" => PDO::PARAM_STR)
+            array("varName" => "email", "value" => $email, "type" => PDO::PARAM_STR)
         );
-        //Do the prepare query
-        $user = $this->queryPrepareExecute($usersQuery, $arrayBinds);
-        // Return the array
-        return $user;
+        // Execute the request
+        $usersReturned = $this->queryPrepareExecute($queryRequest, $arrayBinds);
+        //return the array
+        return $usersReturned;
     }
 
     /**
-     * Insert a teacher to the database
+     * Get all the smartphone with a specifical os
      */
-    public function addTeacher($Firstname, $Name, $Gender, $Nickname, $Origin, $Section){
-        // Recover the id, the firstname, the name and the nickname of all the teachers 
-        $InsertQuery = "INSERT INTO `t_teacher` (`idTeacher`, `teaFirstname`, `teaName`, `teaGender`, `teaNickname`, `teaOrigine`, `fkSection`) VALUES (NULL, :Firstname, :Name, :Gender, :Nickname, :Origine, :Section);";
-        //Create the table for the prepare query
-        $arrayWithBinds = array(
-            0 => array("varName" => "Firstname", "value" => $Firstname, "type" => PDO::PARAM_STR),
-            1 => array("varName" => "Name", "value" => $Name, "type" => PDO::PARAM_STR),
-            2 => array("varName" => "Gender", "value" => $Gender, "type" => PDO::PARAM_STR),
-            3 => array("varName" => "Nickname", "value" => $Nickname, "type" => PDO::PARAM_STR),
-            4 => array("varName" => "Origine", "value" => $Origin, "type" => PDO::PARAM_STR),
-            5 => array("varName" => "Section", "value" => $Section, "type" => PDO::PARAM_INT)
+    public function selectProductByOS($OS){
+        // Get the informations of the phones
+        $queryRequest = "SELECT * FROM t_products WHERE proOS=:os";
+        // Set an array with the binds values
+        $arrayBinds = array(
+            array("varName" => "os", "value" => $OS, "type" => PDO::PARAM_STR)
         );
-        //Do the query prepare
-        $this->queryPrepareExecute($InsertQuery, $arrayWithBinds);
+        // Execute the request
+        $PhoneReturned = $this->queryPrepareExecute($queryRequest, $arrayBinds);
+        //return the array
+        return $PhoneReturned;
     }
 
     /**
-     * Update a teacher
+     * Get all the smartphone with a specifical constructor
      */
-    public function updateTeacher($id, $Firstname, $Name, $Gender, $Nickname, $Origin, $Section){
-        // Recover the id, the firstname, the name and the nickname of all the teachers 
-        $InsertQuery = "UPDATE `t_teacher` SET teaFirstname = :Firstname, teaName = :Name, teaGender = :Gender, teaNickname = :Nickname, teaOrigine = :Origine, fkSection = :Section WHERE idTeacher = :idTeacher";
-        //Create the array for the prepare query
-        $arrayWithBinds = array(
-            0 => array("varName" => "Firstname", "value" => $Firstname, "type" => PDO::PARAM_STR),
-            1 => array("varName" => "Name", "value" => $Name, "type" => PDO::PARAM_STR),
-            2 => array("varName" => "Gender", "value" => $Gender, "type" => PDO::PARAM_STR),
-            3 => array("varName" => "Nickname", "value" => $Nickname, "type" => PDO::PARAM_STR),
-            4 => array("varName" => "Origine", "value" => $Origin, "type" => PDO::PARAM_STR),
-            5 => array("varName" => "Section", "value" => $Section, "type" => PDO::PARAM_INT),
-            6 => array("varName" => "idTeacher", "value" => $id, "type" => PDO::PARAM_INT)
+    public function selectProductByConstructor($constructor){
+        // Get the informations of the phones
+        $queryRequest = "SELECT * FROM t_products
+        INNER JOIN t_constructor ON t_constructor.idConstructor = t_products.fkConstructor
+        WHERE conName=:constructor";
+        // Set an array with the binds values
+        $arrayBinds = array(
+            array("varName" => "constructor", "value" => $constructor, "type" => PDO::PARAM_STR)
         );
-        //Do the query prepare
-        $this->queryPrepareExecute($InsertQuery, $arrayWithBinds);
+        // Execute the request
+        $PhoneReturned = $this->queryPrepareExecute($queryRequest, $arrayBinds);
+        //return the array
+        return $PhoneReturned;
+    }
+    
+    /**
+     * Get all the smartphone with a specifical constructor or os and order it by price
+     */
+    public function selectProductOrderByPriceLow($osOrConstructor, $osOrConstructValue){
+        //Get the phones with a constructor or an os
+        if($osOrConstructor == "os"){
+            //Check if the os is "all" and if it's remove the WHERE clause
+            if($osOrConstructValue == "All"){
+                // Get the informations of the phones
+                $queryRequestOrdered = "SELECT * FROM t_products
+                ORDER BY proPrice ASC
+                LIMIT 1";
+                // Execute the request
+                $PhoneReturned = $this->querySimpleExecute($queryRequestOrdered);
+            }else{
+                // Get the informations of the phones
+                $queryRequestOrdered = "SELECT * FROM t_products
+                WHERE proOS = :os
+                ORDER BY proPrice ASC
+                LIMIT 1";
+                // Set an array with the binds values
+                $arrayBinds = array(
+                    array("varName" => "os", "value" => $osOrConstructValue, "type" => PDO::PARAM_STR)
+                );
+                // Execute the request
+                $PhoneReturned = $this->queryPrepareExecute($queryRequestOrdered, $arrayBinds);
+            }
+        }elseif($osOrConstructor == "constructor"){
+            //Check if the constructor is "all" and if it's remove the WHERE clause
+            if($osOrConstructValue == "all"){
+                // Get the informations of the phones
+                $queryRequestOrdered = "SELECT * FROM t_products
+                INNER JOIN t_constructor ON t_constructor.idConstructor = t_products.fkConstructor
+                ORDER BY proPrice ASC
+                LIMIT 1";
+                // Execute the request
+                $PhoneReturned = $this->querySimpleExecute($queryRequestOrdered);
+            }else{
+                // Get the informations of the phones
+                $queryRequestOrdered = "SELECT * FROM t_products
+                INNER JOIN t_constructor ON t_constructor.idConstructor = t_products.fkConstructor
+                WHERE conName=:constructor
+                ORDER BY proPrice ASC
+                LIMIT 1";
+                // Set an array with the binds values
+                $arrayBinds = array(
+                    array("varName" => "constructor", "value" => $osOrConstructValue, "type" => PDO::PARAM_STR)
+                );
+                // Execute the request
+                $PhoneReturned = $this->queryPrepareExecute($queryRequestOrdered, $arrayBinds);
+            }
+        }
+        //return the array
+        return $PhoneReturned;
     }
 
     /**
-     * Delete a teacher
+     * Get all the smartphone with a specifical constructor or os and order it by price
      */
-    public function deleteTeacher($id){
-        // Set the query to delete the teacher
-        $DeleteQuery = "DELETE FROM `t_teacher` WHERE idTeacher = :idTeacher;";
-        //Create the array for the prepare query
-        $arrayWithBinds = array(
-            array("varName" => "idTeacher", "value" => $id, "type" => PDO::PARAM_INT)
+    public function selectProductOrderByPriceHeight($osOrConstructor, $osOrConstructValue){
+        //Get the phones with a constructor or an os
+        if($osOrConstructor == "os"){
+            //Check if the os is "all" and if it's remove the WHERE clause
+            if($osOrConstructValue == "All"){
+                // Get the informations of the phones
+                $queryRequestOrdered = "SELECT * FROM t_products
+                ORDER BY proPrice DESC
+                LIMIT 3";
+                // Execute the request
+                $PhoneReturned = $this->querySimpleExecute($queryRequestOrdered);
+            }else{
+                // Get the informations of the phones
+                $queryRequestOrdered = "SELECT * FROM t_products
+                WHERE proOS = :os
+                ORDER BY proPrice DESC
+                LIMIT 3";
+                // Set an array with the binds values
+                $arrayBinds = array(
+                    array("varName" => "os", "value" => $osOrConstructValue, "type" => PDO::PARAM_STR)
+                );
+                // Execute the request
+                $PhoneReturned = $this->queryPrepareExecute($queryRequestOrdered, $arrayBinds);
+            }
+        }elseif($osOrConstructor == "constructor"){
+            //Check if the constructor is "all" and if it's remove the WHERE clause
+            if($osOrConstructValue == "all"){
+                // Get the informations of the phones
+                $queryRequestOrdered = "SELECT * FROM t_products
+                INNER JOIN t_constructor ON t_constructor.idConstructor = t_products.fkConstructor
+                ORDER BY proPrice DESC
+                LIMIT 3";
+                // Execute the request
+                $PhoneReturned = $this->querySimpleExecute($queryRequestOrdered);
+            }else{
+                // Get the informations of the phones
+                $queryRequestOrdered = "SELECT * FROM t_products
+                INNER JOIN t_constructor ON t_constructor.idConstructor = t_products.fkConstructor
+                WHERE conName=:constructor
+                ORDER BY proPrice DESC
+                LIMIT 3";
+                // Set an array with the binds values
+                $arrayBinds = array(
+                    array("varName" => "constructor", "value" => $osOrConstructValue, "type" => PDO::PARAM_STR)
+                );
+                // Execute the request
+                $PhoneReturned = $this->queryPrepareExecute($queryRequestOrdered, $arrayBinds);
+            }
+        }
+        //return the array
+        return $PhoneReturned;
+    }
+
+    /**
+     * Get all the smartphone with a specifical constructor or os and order it by the screen size
+     */
+    public function selectProductOrderByScreen($osOrConstructor, $osOrConstructValue){
+        //Get the phones with a constructor or an os
+        if($osOrConstructor == "os"){
+            //Check if the os is "all" and if it's remove the WHERE clause
+            if($osOrConstructValue == "All"){
+                // Get the informations of the phones
+                $queryRequestOrdered = "SELECT * FROM t_products
+                ORDER BY proSize DESC";
+                // Execute the request
+                $PhoneReturned = $this->querySimpleExecute($queryRequestOrdered);
+            }else{
+                // Get the informations of the phones
+                $queryRequestOrdered = "SELECT * FROM t_products
+                WHERE proOS = :os
+                ORDER BY proSize DESC";
+                // Set an array with the binds values
+                $arrayBinds = array(
+                    array("varName" => "os", "value" => $osOrConstructValue, "type" => PDO::PARAM_STR)
+                );
+                // Execute the request
+                $PhoneReturned = $this->queryPrepareExecute($queryRequestOrdered, $arrayBinds);
+            }
+        }elseif($osOrConstructor == "constructor"){
+            //Check if the constructor is "all" and if it's remove the WHERE clause
+            if($osOrConstructValue == "all"){
+                // Get the informations of the phones
+                $queryRequestOrdered = "SELECT * FROM t_products
+                INNER JOIN t_constructor ON t_constructor.idConstructor = t_products.fkConstructor
+                ORDER BY proSize DESC";
+                // Execute the request
+                $PhoneReturned = $this->querySimpleExecute($queryRequestOrdered);
+            }else{
+                // Get the informations of the phones
+                $queryRequestOrdered = "SELECT * FROM t_products
+                INNER JOIN t_constructor ON t_constructor.idConstructor = t_products.fkConstructor
+                WHERE conName=:constructor
+                ORDER BY proSize DESC";
+                // Set an array with the binds values
+                $arrayBinds = array(
+                    array("varName" => "constructor", "value" => $osOrConstructValue, "type" => PDO::PARAM_STR)
+                );
+                // Execute the request
+                $PhoneReturned = $this->queryPrepareExecute($queryRequestOrdered, $arrayBinds);
+            }
+        }
+        //return the array
+        return $PhoneReturned;
+    }
+
+    /**
+     * Get all the smartphone with a specifical constructor or os and order it by the autonomy duration
+     */
+    public function selectProductOrderByAutonomy($osOrConstructor, $osOrConstructValue){
+        //Get the phones with a constructor or an os
+        if($osOrConstructor == "os"){
+            //Check if the os is "all" and if it's remove the WHERE clause
+            if($osOrConstructValue == "All"){
+                // Get the informations of the phones
+                $queryRequestOrdered = "SELECT * FROM t_products
+                ORDER BY proAutonomy DESC
+                LIMIT 5";
+                // Execute the request
+                $PhoneReturned = $this->querySimpleExecute($queryRequestOrdered);
+            }else{
+                // Get the informations of the phones
+                $queryRequestOrdered = "SELECT * FROM t_products
+                WHERE proOS = :os
+                ORDER BY proAutonomy DESC
+                LIMIT 5";
+                // Set an array with the binds values
+                $arrayBinds = array(
+                    array("varName" => "os", "value" => $osOrConstructValue, "type" => PDO::PARAM_STR)
+                );
+                // Execute the request
+                $PhoneReturned = $this->queryPrepareExecute($queryRequestOrdered, $arrayBinds);
+            }
+        }elseif($osOrConstructor == "constructor"){
+            //Check if the constructor is "all" and if it's remove the WHERE clause
+            if($osOrConstructValue == "all"){
+                // Get the informations of the phones
+                $queryRequestOrdered = "SELECT * FROM t_products
+                INNER JOIN t_constructor ON t_constructor.idConstructor = t_products.fkConstructor
+                ORDER BY proAutonomy DESC
+                LIMIT 5";
+                // Execute the request
+                $PhoneReturned = $this->querySimpleExecute($queryRequestOrdered);
+            }else{
+                // Get the informations of the phones
+                $queryRequestOrdered = "SELECT * FROM t_products
+                INNER JOIN t_constructor ON t_constructor.idConstructor = t_products.fkConstructor
+                WHERE conName=:constructor
+                ORDER BY proAutonomy DESC
+                LIMIT 5";
+                // Set an array with the binds values
+                $arrayBinds = array(
+                    array("varName" => "constructor", "value" => $osOrConstructValue, "type" => PDO::PARAM_STR)
+                );
+                // Execute the request
+                $PhoneReturned = $this->queryPrepareExecute($queryRequestOrdered, $arrayBinds);
+            }
+        }
+        //return the array
+        return $PhoneReturned;
+    }
+
+    /**
+     * Get all the smartphone with a specifical constructor or os and order it by the nb of hearth * frequence
+     */
+    public function selectProductOrderByCPU($osOrConstructor, $osOrConstructValue){
+        //Get the phones with a constructor or an os
+        if($osOrConstructor == "os"){
+            //Check if the os is "all" and if it's remove the WHERE clause
+            if($osOrConstructValue == "All"){
+                // Get the informations of the phones
+                $queryRequestOrdered = "SELECT * FROM t_products
+                ORDER BY (proNbHearts * proFrequence) DESC
+                LIMIT 10";
+                // Execute the request
+                $PhoneReturned = $this->querySimpleExecute($queryRequestOrdered);
+            }else{
+                // Get the informations of the phones
+                $queryRequestOrdered = "SELECT * FROM t_products
+                WHERE proOS = :os
+                ORDER BY (proNbHearts * proFrequence) DESC
+                LIMIT 10";
+                // Set an array with the binds values
+                $arrayBinds = array(
+                    array("varName" => "os", "value" => $osOrConstructValue, "type" => PDO::PARAM_STR)
+                );
+                // Execute the request
+                $PhoneReturned = $this->queryPrepareExecute($queryRequestOrdered, $arrayBinds);
+            }
+        }elseif($osOrConstructor == "constructor"){
+            //Check if the constructor is "all" and if it's remove the WHERE clause
+            if($osOrConstructValue == "all"){
+                // Get the informations of the phones
+                $queryRequestOrdered = "SELECT * FROM t_products
+                INNER JOIN t_constructor ON t_constructor.idConstructor = t_products.fkConstructor
+                ORDER BY (proNbHearts * proFrequence) DESC
+                LIMIT 10";
+                // Execute the request
+                $PhoneReturned = $this->querySimpleExecute($queryRequestOrdered);
+            }else{
+                // Get the informations of the phones
+                $queryRequestOrdered = "SELECT * FROM t_products
+                INNER JOIN t_constructor ON t_constructor.idConstructor = t_products.fkConstructor
+                WHERE conName=:constructor
+                ORDER BY (proNbHearts * proFrequence) DESC
+                LIMIT 10";
+                // Set an array with the binds values
+                $arrayBinds = array(
+                    array("varName" => "constructor", "value" => $osOrConstructValue, "type" => PDO::PARAM_STR)
+                );
+                // Execute the request
+                $PhoneReturned = $this->queryPrepareExecute($queryRequestOrdered, $arrayBinds);
+            }
+        }
+        //return the array
+        return $PhoneReturned;
+    }
+
+    /**
+     * Get all the smartphone with a specifical constructor or os and order it by the screen size, the nb of hearth * frequence and the RAM
+     */
+    public function selectProductOrderByCPUScreenRam($osOrConstructor, $osOrConstructValue){
+        //Get the phones with a constructor or an os
+        if($osOrConstructor == "os"){
+            //Check if the os is "all" and if it's remove the WHERE clause
+            if($osOrConstructValue == "All"){
+                // Get the informations of the phones
+                $queryRequestOrdered = "SELECT * FROM t_products
+                ORDER BY (proNbHearts * proFrequence) DESC, proRam DESC, proSize DESC
+                LIMIT 5";
+                // Execute the request
+                $PhoneReturned = $this->querySimpleExecute($queryRequestOrdered);
+            }else{
+                // Get the informations of the phones
+                $queryRequestOrdered = "SELECT * FROM t_products
+                WHERE proOS = :os
+                ORDER BY (proNbHearts * proFrequence) DESC, proRam DESC, proSize DESC
+                LIMIT 5";
+                // Set an array with the binds values
+                $arrayBinds = array(
+                    array("varName" => "os", "value" => $osOrConstructValue, "type" => PDO::PARAM_STR)
+                );
+                // Execute the request
+                $PhoneReturned = $this->queryPrepareExecute($queryRequestOrdered, $arrayBinds);
+            }
+        }elseif($osOrConstructor == "constructor"){
+            //Check if the constructor is "all" and if it's remove the WHERE clause
+            if($osOrConstructValue == "all"){
+                // Get the informations of the phones
+                $queryRequestOrdered = "SELECT * FROM t_products
+                INNER JOIN t_constructor ON t_constructor.idConstructor = t_products.fkConstructor
+                ORDER BY (proNbHearts * proFrequence) DESC, proRam DESC, proSize DESC
+                LIMIT 5";
+                // Execute the request
+                $PhoneReturned = $this->querySimpleExecute($queryRequestOrdered);
+            }else{
+                // Get the informations of the phones
+                $queryRequestOrdered = "SELECT * FROM t_products
+                INNER JOIN t_constructor ON t_constructor.idConstructor = t_products.fkConstructor
+                WHERE conName=:constructor
+                ORDER BY (proNbHearts * proFrequence) DESC, proRam DESC, proSize DESC
+                LIMIT 5";
+                // Set an array with the binds values
+                $arrayBinds = array(
+                    array("varName" => "constructor", "value" => $osOrConstructValue, "type" => PDO::PARAM_STR)
+                );
+                // Execute the request
+                $PhoneReturned = $this->queryPrepareExecute($queryRequestOrdered, $arrayBinds);
+            }
+        }
+        //return the array
+        return $PhoneReturned;
+    }
+
+    /**
+     * Get all the smartphone
+     */
+    public function selectAllProduct(){
+        // Get the informations of the phones
+        $queryRequest = "SELECT * FROM t_products";
+        // Execute the request
+        $PhoneReturned = $this->querySimpleExecute($queryRequest);
+        //return the array
+        return $PhoneReturned;
+    }
+
+    /**
+     * Get one of the smartphone with the id
+     */
+    public function selectOneProduct($id){
+        // Get the informations of the phones
+        $queryRequest = "SELECT *, t_constructor.conName FROM t_products 
+        INNER JOIN t_constructor ON t_constructor.idConstructor = t_products.fkConstructor
+        WHERE idProducts=:id";
+        // Set an array with the binds values
+        $arrayBinds = array(
+            array("varName" => "id", "value" => $id, "type" => PDO::PARAM_INT)
         );
-        //Do the query prepare
-        $this->queryPrepareExecute($DeleteQuery, $arrayWithBinds);
+        // Execute the request
+        $PhoneReturned = $this->queryPrepareExecute($queryRequest, $arrayBinds);
+        //return the array
+        return $PhoneReturned;
+    }
+
+    /**
+     * Get all the constructors
+     */
+    public function selectAllConstructors(){
+        // Get the informations of the constructors
+        $queryRequest = "SELECT idConstructor, conName FROM t_constructor";
+        // Execute the request
+        $constructors = $this->querySimpleExecute($queryRequest);
+        //return the array
+        return $constructors;
     }
  }
 ?>

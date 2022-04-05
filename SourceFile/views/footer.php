@@ -24,8 +24,7 @@
                 <div class="col-md-4 pt-5">
                     <h2 class="h2 text-light border-bottom pb-3 border-light">Products</h2>
                     <ul class="list-unstyled text-light footer-link-list">
-                        <li><a class="text-decoration-none" href="#">Apple</a></li>
-                        <li><a class="text-decoration-none" href="#">Samsung</a></li>
+                        <li><a class="text-decoration-none" href="index.php?controller=shop&action=home&os=all&order=all">Phones</a></li>
                     </ul>
                 </div>
 

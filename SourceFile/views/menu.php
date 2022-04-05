@@ -19,11 +19,22 @@
                         <a class="nav-link" href="index.php?controller=about&action=aboutUs">About</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="index.php?controller=shop&action=listAllProducts">Shop</a>
+                        <a class="nav-link" href="index.php?controller=shop&action=home&os=all&order=all">Shop</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="index.php?controller=contact&action=contact">Contact</a>
                     </li>
+                    <?php
+                    if(isset($_SESSION['admin'])){
+                        if($_SESSION['admin'] == true){
+                    ?>
+                        <li class="nav-item">
+                            <a class="nav-link" href="index.php?controller=admin&action=adminInterface">Administration</a>
+                        </li>
+                    <?php
+                        }
+                    }
+                    ?>
                 </ul>
             </div>
             <div class="navbar align-self-center d-flex divTest">
@@ -35,7 +46,7 @@
                             <i class="fa fa-fw fa-cart-arrow-down text-dark mr-1"></i>
                             <span class="position-absolute top-0 left-100 translate-middle badge rounded-pill bg-light text-dark numberCart">99+</span>
                         </a>
-                        <span class="nameUserConnected"><?=/*$_SESSION['name'];*/"emilien"?></span>
+                        <span class="nameUserConnected"><?=$_SESSION['username'];?></span>
                         <button class="btn btn-primary" onclick="window.location.href = 'index.php?controller=logUsers&action=logout';">Se déconnecter</button>
                     </div>
                 <?php
