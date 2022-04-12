@@ -20,6 +20,7 @@ include_once 'controllers/HomeController.php';
 include_once 'controllers/LogController.php';
 include_once 'controllers/ShopController.php';
 include_once 'controllers/ShopSingleController.php';
+
 include_once 'models/database.php';
 
 class MainController {
@@ -33,7 +34,6 @@ class MainController {
             $_GET['controller'] = 'home';
             $_GET['action'] = 'home';
         }
-
 
         $currentLink = $this->menuSelected($_GET['controller']);
         $this->viewBuild($currentLink);
