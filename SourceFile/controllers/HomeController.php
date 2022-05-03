@@ -15,9 +15,18 @@ class HomeController extends Controller {
      */
     public function display() {
 
-        $action = $_GET['action'] . "Action";
+        if(isset($_GET['action'])){
+            $action = $_GET['action'] . "Action";
+        }else{
+            $action = "NoAction";
+        }
 
-        return call_user_func(array($this, $action));
+        // Call a method in this class
+        try {
+            return call_user_func(array($this, $action));
+        } catch (\Throwable $th) {
+            return call_user_func(array($this, "homeAction"));
+        }
     }
 
     /**

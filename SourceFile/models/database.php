@@ -100,7 +100,7 @@ class Database {
             array("varName" => "username", "value" => $username, "type" => PDO::PARAM_STR),
             array("varName" => "age", "value" => $age, "type" => PDO::PARAM_INT)
         );
-        // Insert the user
+        // Do the prepare request
         $this->queryPrepareExecute($queryRequest, $arrayBinds);
     }
 
@@ -540,6 +540,126 @@ class Database {
         $constructors = $this->querySimpleExecute($queryRequest);
         //return the array
         return $constructors;
+    }
+
+    /**
+     * Add a product to a cart
+     */
+    public function addAProductToCart($idProduct, $idCustomer){
+        // Check if the product exists
+        $queryRequest = "SELECT * FROM t_cart WHERE fkProduct=:idProduct AND fkClient=:idClient";
+        // Set an array with the binds values
+        $arrayBinds = array(
+            array("varName" => "idProduct", "value" => $idProduct, "type" => PDO::PARAM_INT),
+            array("varName" => "idClient", "value" => $idCustomer, "type" => PDO::PARAM_INT)
+        );
+        // Do the prepare request
+        $result = $this->queryPrepareExecute($queryRequest, $arrayBinds);
+
+        //If the product is already in this cart, add 1 to the quantity, else add it to the cart
+        if($result){
+            // Insert the product to the table t_cart
+            $queryRequest = "UPDATE t_cart
+            SET carQuantity = :quantityToUpdate
+            WHERE fkProduct=:idProduct AND fkClient=:idClient";
+            // Set an array with the binds values
+            $arrayBinds = array(
+                array("varName" => "quantityToUpdate", "value" => $result[0]['carQuantity'] + 1, "type" => PDO::PARAM_INT),
+                array("varName" => "idProduct", "value" => $idProduct, "type" => PDO::PARAM_INT),
+                array("varName" => "idClient", "value" => $idCustomer, "type" => PDO::PARAM_INT)
+            );
+            // Do the prepare request
+            $this->queryPrepareExecute($queryRequest, $arrayBinds);
+        }
+        else{
+            // Insert the product to the table t_cart
+            $queryRequest = "INSERT INTO `t_cart` (`carQuantity`, `fkProduct`, `fkClient`)
+            VALUES (1, :idProduct, :idClient);";
+            // Set an array with the binds values
+            $arrayBinds = array(
+                array("varName" => "idProduct", "value" => $idProduct, "type" => PDO::PARAM_INT),
+                array("varName" => "idClient", "value" => $idCustomer, "type" => PDO::PARAM_INT)
+            );
+            // Do the prepare request
+            $this->queryPrepareExecute($queryRequest, $arrayBinds);
+        }
+    }
+    
+    /**
+     * Set the quantity than one more
+     */
+    public function plusProductToCart($idProduct, $idCustomer){
+        // Select the product
+        $queryRequest = "SELECT * FROM t_cart WHERE fkProduct=:idProduct AND fkClient=:idClient";
+        // Set an array with the binds values
+        $arrayBinds = array(
+            array("varName" => "idProduct", "value" => $idProduct, "type" => PDO::PARAM_INT),
+            array("varName" => "idClient", "value" => $idCustomer, "type" => PDO::PARAM_INT)
+        );
+        // Do the prepare request
+        $result = $this->queryPrepareExecute($queryRequest, $arrayBinds);
+
+        // Update the product to the table t_cart
+        $queryRequest = "UPDATE t_cart
+        SET carQuantity = :quantityToUpdate
+        WHERE fkProduct=:idProduct AND fkClient=:idClient";
+        // Set an array with the binds values
+        $arrayBinds = array(
+            array("varName" => "quantityToUpdate", "value" => $result[0]['carQuantity'] + 1, "type" => PDO::PARAM_INT),
+            array("varName" => "idProduct", "value" => $idProduct, "type" => PDO::PARAM_INT),
+            array("varName" => "idClient", "value" => $idCustomer, "type" => PDO::PARAM_INT)
+        );
+        // Do the prepare request
+        $this->queryPrepareExecute($queryRequest, $arrayBinds);
+    }
+    
+    /**
+     * Set the quantity less than one
+     */
+    public function minusProductToCart($idProduct, $idCustomer){
+        // Select the product
+        $queryRequest = "SELECT * FROM t_cart WHERE fkProduct=:idProduct AND fkClient=:idClient";
+        // Set an array with the binds values
+        $arrayBinds = array(
+            array("varName" => "idProduct", "value" => $idProduct, "type" => PDO::PARAM_INT),
+            array("varName" => "idClient", "value" => $idCustomer, "type" => PDO::PARAM_INT)
+        );
+        // Do the prepare request
+        $result = $this->queryPrepareExecute($queryRequest, $arrayBinds);
+
+        //Check if the product if more than 1
+        if($result[0]['carQuantity'] > 1){
+            // Update the product to the table t_cart
+            $queryRequest = "UPDATE t_cart
+            SET carQuantity = :quantityToUpdate
+            WHERE fkProduct=:idProduct AND fkClient=:idClient";
+            // Set an array with the binds values
+            $arrayBinds = array(
+                array("varName" => "quantityToUpdate", "value" => $result[0]['carQuantity'] - 1, "type" => PDO::PARAM_INT),
+                array("varName" => "idProduct", "value" => $idProduct, "type" => PDO::PARAM_INT),
+                array("varName" => "idClient", "value" => $idCustomer, "type" => PDO::PARAM_INT)
+            );
+            // Do the prepare request
+            $this->queryPrepareExecute($queryRequest, $arrayBinds);
+        }
+    }
+    
+    /**
+     * Add a product to a cart
+     */
+    public function SelectAllProductInCart($idCustomer){
+        // Select the products of a cart
+        $queryRequest = "SELECT * FROM t_cart 
+        INNER JOIN t_products ON t_cart.fkProduct = t_products.idProducts
+        WHERE fkClient=:idClient";
+        // Set an array with the binds values
+        $arrayBinds = array(
+            array("varName" => "idClient", "value" => $idCustomer, "type" => PDO::PARAM_INT)
+        );
+        // Do the prepare request
+        $result = $this->queryPrepareExecute($queryRequest, $arrayBinds);
+
+        return $result;
     }
  }
 ?>

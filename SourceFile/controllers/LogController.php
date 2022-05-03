@@ -19,9 +19,18 @@ class LogController extends Controller {
     */
     public function display() {
 
-        $action = $_GET['action'] . "Action";
+        if(isset($_GET['action'])){
+            $action = $_GET['action'] . "Action";
+        }else{
+            $action = "NoAction";
+        }
 
-        return call_user_func(array($this, $action));
+        // Call a method in this class
+        try {
+            return call_user_func(array($this, $action));
+        } catch (\Throwable $th) {
+            return call_user_func(array($this, "loginAction"));
+        }
     }
 
     /**
@@ -103,6 +112,10 @@ class LogController extends Controller {
                         foreach ($usersFound as $key => $value) {
                             $passwordFromDB = $usersFound[$key]['usePassword'];
                             if($hashPass == $passwordFromDB){
+                                //Select the products in the cart
+                                $productsInCart = $database->SelectAllProductInCart($usersFound[$key]['idUser']);
+                                //Set the session variables
+                                $_SESSION['cart'] = $productsInCart;
                                 $_SESSION['username'] = $usersFound[$key]['useUsername'];
                                 $_SESSION['id'] = $usersFound[$key]['idUser'];
                                 $_SESSION['admin'] = $usersFound[$key]['useAdministrator'];
@@ -141,11 +154,15 @@ class LogController extends Controller {
             //Check if the user correctly entered the values
             if(preg_match('/^([a-z]+|\.)+\@[a-z]+\.[a-z]+$/', $email)){
                 $usersFound = $database->selectUserWithEmail($email);
-
+                
                 if($usersFound){
                     foreach ($usersFound as $key => $value) {
                         $hashPass = $usersFound[$key]['usePassword'];
                         if(password_verify($password, $hashPass)){
+                            //Select the products in the cart
+                            $productsInCart = $database->SelectAllProductInCart($usersFound[$key]['idUser']);
+                            //Set the session variables
+                            $_SESSION['cart'] = $productsInCart;
                             $_SESSION['username'] = $usersFound[$key]['useUsername'];
                             $_SESSION['id'] = $usersFound[$key]['idUser'];
                             $_SESSION['admin'] = $usersFound[$key]['useAdministrator'];

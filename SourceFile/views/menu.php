@@ -16,13 +16,7 @@
                         <a class="nav-link" href="index.php?controller=home&action=home">Home</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="index.php?controller=home&action=home">About</a>
-                    </li>
-                    <li class="nav-item">
                         <a class="nav-link" href="index.php?controller=shop&action=home&os=all&order=all">Shop</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="index.php?controller=home&action=home">Contact</a>
                     </li>
                     <?php
                     if(isset($_SESSION['admin'])){
@@ -39,12 +33,25 @@
             </div>
             <div class="navbar align-self-center d-flex divTest">
                 <?php
-                if(isset($_SESSION['username'])){
+                if(isset($_SESSION['id'])){
                 ?>
                     <div class="ContentLogout">
-                        <a class="nav-icon position-relative text-decoration-none" href="#">
+                        <?php
+                        $numberProductsInCart = count($_SESSION['cart']);
+                        ?>
+                        <a class="nav-icon position-relative text-decoration-none" href="index.php?controller=cart&action=seeCart">
                             <i class="fa fa-fw fa-cart-arrow-down text-dark mr-1"></i>
-                            <span class="position-absolute top-0 left-100 translate-middle badge rounded-pill bg-light text-dark numberCart">99+</span>
+                            <?php
+                            if($numberProductsInCart <= 99){
+                                ?>
+                                <span class="position-absolute top-0 left-100 translate-middle badge rounded-pill bg-light text-dark numberCart"><?=$numberProductsInCart?></span>
+                                <?php
+                            }else{
+                                ?>
+                                <span class="position-absolute top-0 left-100 translate-middle badge rounded-pill bg-light text-dark numberCart">99+</span>
+                                <?php
+                            }
+                            ?>
                         </a>
                         <span class="nameUserConnected"><?=$_SESSION['username'];?></span>
                         <button class="btn btn-primary" onclick="window.location.href = 'index.php?controller=logUsers&action=logout';">Se déconnecter</button>

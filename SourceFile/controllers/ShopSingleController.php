@@ -15,9 +15,18 @@ class ShopSingleController extends Controller {
      */
     public function display() {
 
-        $action = $_GET['action'] . "Action";
+        if(isset($_GET['action'])){
+            $action = $_GET['action'] . "Action";
+        }else{
+            $action = "NoAction";
+        }
 
-        return call_user_func(array($this, $action));
+        // Call a method in this class
+        try {
+            return call_user_func(array($this, $action));
+        } catch (\Throwable $th) {
+            return call_user_func(array($this, "shopSingleAction"));
+        }
     }
 
     /**
@@ -28,16 +37,20 @@ class ShopSingleController extends Controller {
     private function shopSingleAction() {
         $database = new Database();
 
-        $product = $database->selectOneProduct($_GET['id']);
-
-        $_SESSION['singleProduct'] = $product;
-
-        $view = file_get_contents('views/pages/shopSingle/shopSingle.php');
-
-        ob_start();
-        eval('?>' . $view);
-        $content = ob_get_clean();
-
-        return $content;
+        if(isset($_GET['id'])){
+            $product = $database->selectOneProduct($_GET['id']);
+    
+            $_SESSION['singleProduct'] = $product;
+    
+            $view = file_get_contents('views/pages/shopSingle/shopSingle.php');
+    
+            ob_start();
+            eval('?>' . $view);
+            $content = ob_get_clean();
+    
+            return $content;
+        }else{
+            header("Location:index.php?controller=home&action=home");
+        }
     }
 }

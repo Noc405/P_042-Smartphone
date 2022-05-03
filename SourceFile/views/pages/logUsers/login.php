@@ -15,6 +15,13 @@
                         </div>
                     <?php
                         }
+                        if($_GET['error'] == 2){
+                            ?>
+                                <div class="w-100 text-center mt-5">
+                                    <p class="text-danger">Vous devez vous connecter pour effectuer cette action</p>
+                                </div>
+                            <?php
+                        }
                     }
                     ?>
 

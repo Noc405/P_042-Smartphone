@@ -62,9 +62,9 @@ $product = $_SESSION['singleProduct'];
                             <li>Fréquence du processeur : <?=$product[0]['proFrequence'];?> GHz</li>
                             <li>Nombre de coeurs : <?=$product[0]['proNbHearts'];?></li>
                         </ul>
-                        <form action="" method="GET">
-                            <input type="hidden" name="product-title" value="<?=$product[0]['proName'];?>">
-                            <div class="row">
+                        <form action="index.php?controller=cart&action=addToCart" method="post">
+                            <input type="hidden" name="productId" value="<?=$product[0]['idProducts'];?>">
+                            <!-- <div class="row">
                                 <div class="col-auto">
                                     <ul class="list-inline pb-3">
                                         <li class="list-inline-item text-right">
@@ -75,13 +75,10 @@ $product = $_SESSION['singleProduct'];
                                         <li class="list-inline-item"><span class="btn btn-secondary" id="btn-plus">+</span></li>
                                     </ul>
                                 </div>
-                            </div>
+                            </div> -->
                             <div class="row pb-3">
                                 <div class="col d-grid">
-                                    <button type="submit" class="btn btn-success btn-lg" name="submit" value="buy">Buy</button>
-                                </div>
-                                <div class="col d-grid">
-                                    <button type="submit" class="btn btn-success btn-lg" name="submit" value="addtocard">Add To Cart</button>
+                                    <input type="submit" class="btn btn-success btn-lg" name="btnSubmit" value="Add To Cart">
                                 </div>
                             </div>
                         </form>

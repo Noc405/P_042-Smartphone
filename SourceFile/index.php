@@ -20,6 +20,7 @@ include_once 'controllers/HomeController.php';
 include_once 'controllers/LogController.php';
 include_once 'controllers/ShopController.php';
 include_once 'controllers/ShopSingleController.php';
+include_once 'controllers/CartController.php';
 
 include_once 'models/database.php';
 
@@ -59,6 +60,9 @@ class MainController {
                 break;
             case 'shopSingle':
                 $link = new ShopSingleController();
+                break;
+            case 'cart':
+                $link = new CartController();
                 break;
             default:
                 $link = new HomeController();

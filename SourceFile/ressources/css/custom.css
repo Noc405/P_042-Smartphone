@@ -15,6 +15,9 @@ Custom Css
 .picturePhoneContent{
     height: 300px;
 }
+.picturePhoneContentCart{
+    height: 100px;
+}
 .contentSinglePhoneImage{
     height: 400px;
 }
