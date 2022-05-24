@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Hôte : localhost
--- Généré le : mar. 03 mai 2022 à 12:40
+-- Généré le : mar. 24 mai 2022 à 11:14
 -- Version du serveur :  5.7.11
 -- Version de PHP : 8.0.1
 
@@ -42,10 +42,11 @@ CREATE TABLE `t_cart` (
 
 INSERT INTO `t_cart` (`idCart`, `carQuantity`, `fkProduct`, `fkClient`) VALUES
 (1, 1, 2, 2),
-(2, 1, 2, 2),
 (3, 1, 1, 2),
-(4, 1, 4, 2),
-(5, 1, 1, 2);
+(6, 1, 3, 2),
+(7, 1, 1, 1),
+(8, 1, 2, 1),
+(9, 1, 4, 2);
 
 -- --------------------------------------------------------
 
@@ -122,7 +123,7 @@ CREATE TABLE `t_users` (
 --
 
 INSERT INTO `t_users` (`idUser`, `useEmail`, `usePassword`, `useUsername`, `useCreationDate`, `useAge`, `useAdministrator`) VALUES
-(1, 'emilien.charpie@gmail.com', '$2y$10$lzNDi7PrsA15SDfWJnULw.OtFGrbXKZkBUAxee8WMjlsiOMyI/bwu', 'emilien_chrp', '2022-03-29 21:15:19', 17, 0),
+(1, 'emilien.charpie@gmail.com', '$2y$10$lzNDi7PrsA15SDfWJnULw.OtFGrbXKZkBUAxee8WMjlsiOMyI/bwu', 'emilien_chrp', '2022-03-29 21:15:19', 17, 1),
 (2, 'test@test.com', '$2y$10$DUfO0jUcTmgdhSlkDFZjqu67TwE2MAlH6VYQp24vi2YQZt2NSe3DS', 'testUser', '2022-03-30 08:18:39', 12, 0),
 (4, 'testa@test.com', '$2y$10$1mewN.SUNgjMlSwyPdb45.ScKkWrfOwxZFAZaDzI8glbI.DFoRPua', 'testAdmin', '2022-03-30 08:27:56', 12, 1);
 
@@ -165,7 +166,7 @@ ALTER TABLE `t_users`
 -- AUTO_INCREMENT pour la table `t_cart`
 --
 ALTER TABLE `t_cart`
-  MODIFY `idCart` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `idCart` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 
 --
 -- AUTO_INCREMENT pour la table `t_constructor`

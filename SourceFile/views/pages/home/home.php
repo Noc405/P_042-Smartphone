@@ -13,11 +13,10 @@
                     </div>
                     <div class="col-lg-6 mb-0 d-flex align-items-center">
                         <div class="text-align-left align-self-center">
-                            <h1 class="h1 text-success"><b>Nom du site</b> Vente de smartphones</h1>
-                            <h3 class="h2">Subtitle</h3>
+                            <h1 class="h1 text-success"><b>Smartphone ++</b><br>Vente de smartphones</h1>
+                            <h3 class="h2">Le meilleur dans ce domaine</h3>
                             <p>
-                                Text
-                                <a rel="sponsored" class="text-success" href="#" target="_blank">Lien</a>.
+                                <a rel="sponsored" class="text-success" href="index.php?controller=shop&action=home&os=all&order=all">Voir les dispositions</a>
                             </p>
                         </div>
                     </div>
@@ -32,11 +31,11 @@
                     </div>
                     <div class="col-lg-6 mb-0 d-flex align-items-center">
                         <div class="text-align-left">
-                            <h1 class="h1">Title</h1>
-                            <h3 class="h2">Subtitle</h3>
+                            <h1 class="h1">Trouver rapidement et simplement</h1>
+                            <h3 class="h2">Ca n'a jamais été aussi simple</h3>
                             <p>
-                                Text normal
-                                <strong>Text en gras</strong>
+                                Un système de tri
+                                <strong>comme aucun autre</strong>
                             </p>
                         </div>
                     </div>
@@ -51,11 +50,12 @@
                     </div>
                     <div class="col-lg-6 mb-0 d-flex align-items-center">
                         <div class="text-align-left">
-                            <h1 class="h1">Title</h1>
-                            <h3 class="h2">Subtitle</h3>
+                            <h1 class="h1">Des prix jamais vus !</h1>
+                            <h3 class="h2">Les meileurs sur le marché</h3>
                             <p>
-                                Text
-                                <strong>Text en gras</strong>
+                                Au moins
+                                <strong>20</strong>
+                                disponibles actuellement
                             </p>
                         </div>
                     </div>

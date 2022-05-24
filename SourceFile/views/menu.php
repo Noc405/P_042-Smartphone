@@ -18,13 +18,14 @@
                     <li class="nav-item">
                         <a class="nav-link" href="index.php?controller=shop&action=home&os=all&order=all">Shop</a>
                     </li>
+                    <!-- Administration panel  -->
                     <?php
                     if(isset($_SESSION['admin'])){
                         if($_SESSION['admin'] == true){
                     ?>
-                        <li class="nav-item">
+                        <!-- <li class="nav-item">
                             <a class="nav-link" href="index.php?controller=home&action=home">Administration</a>
-                        </li>
+                        </li> -->
                     <?php
                         }
                     }
@@ -37,7 +38,8 @@
                 ?>
                     <div class="ContentLogout">
                         <?php
-                        $numberProductsInCart = count($_SESSION['cart']);
+                        if(isset($_SESSION['cart'])){
+                            $numberProductsInCart = count($_SESSION['cart']);
                         ?>
                         <a class="nav-icon position-relative text-decoration-none" href="index.php?controller=cart&action=seeCart">
                             <i class="fa fa-fw fa-cart-arrow-down text-dark mr-1"></i>
@@ -51,6 +53,7 @@
                                 <span class="position-absolute top-0 left-100 translate-middle badge rounded-pill bg-light text-dark numberCart">99+</span>
                                 <?php
                             }
+                        }
                             ?>
                         </a>
                         <span class="nameUserConnected"><?=$_SESSION['username'];?></span>
