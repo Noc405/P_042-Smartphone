@@ -2,7 +2,7 @@
 
 class connexionValues {
     private $host = "localhost";
-    private $user = 'userForDB_Smartphone';
+    private $user = 'userSmartphones';
     private $dbname = "db_smartphones";
 
     public function getValues(){
